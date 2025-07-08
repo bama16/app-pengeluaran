@@ -1,0 +1,101 @@
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import '../../global.css';
+import ScreenWrapper from '../components/screenWrapper';
+import { color } from '../../assets/themes';
+import randomImages from '../../assets/images/randomimage';
+
+const items = [
+  {
+    id: 1,
+    place: 'Jakarta',
+    country: 'Indonesian',
+  },
+  {
+    id: 2,
+    place: 'Bandung',
+    country: 'Indonesian',
+  },
+  {
+    id: 3,
+    place: 'Yogyakarta',
+    country: 'Indonesian',
+  },
+  {
+    id: 4,
+    place: 'Bali',
+    country: 'Indonesian',
+  },
+  {
+    id: 5,
+    place: 'Papua',
+    country: 'Indonesian',
+  },
+  {
+    id: 6,
+    place: 'PIK',
+    country: 'Indonesian',
+  },
+];
+
+const HomeScreen = () => {
+  return (
+    <ScreenWrapper className="flex-1">
+      <View className="flex-row justify-between items-center p-4">
+        <Text className="font-bold text-3xl shadow-sm">Expensify</Text>
+        <TouchableOpacity className="p-2 px-3 bg-white border border-gray-200 rounded-full">
+          <Text className="">Logout</Text>
+        </TouchableOpacity>
+      </View>
+      <View className="flex-row justify-center items-center bg-blue-200 rounded-xl mx-4 mb-4">
+        <Image
+          source={require('../../assets/images/banner.png')}
+          className="w-60 h-60"
+        ></Image>
+      </View>
+      <View className="px-4 space-y-3">
+        <View className="flex-row justify-between items-center">
+          <Text className={`${color.heading} font-bold text-xl`}>
+            Recent Trips
+          </Text>
+          <TouchableOpacity className="p-2 px-3 bg-white border border-gray-200 rounded-full">
+            <Text className={color.heading}>Add Trip</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <FlatList
+            data={items}
+            numColumns={2}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-around',
+            }}
+            className='="mx-1'
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity className="bg-white p-5 rounded-2xl mb-6 shadow-sm">
+                  <View>
+                    <Image
+                      source={require('../../assets/images/2.png')}
+                      className="w-40 h-40 mb-2"
+                    />
+                    <Text className={`${color.heading} font-bold`}>
+                      {item.place}
+                    </Text>
+                    <Text className={`${color.heading} text-xs`}>
+                      {item.country}
+                    </Text>
+                    <Text></Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      </View>
+    </ScreenWrapper>
+  );
+};
+
+export default HomeScreen;
