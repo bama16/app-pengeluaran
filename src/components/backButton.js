@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 const BackButton = () => {
   const navigation = useNavigation();
   console.log('Tombol back di tekan');
-  console.log(navigation.goBack);
 
   return (
     <TouchableOpacity

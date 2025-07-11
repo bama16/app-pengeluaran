@@ -87,7 +87,12 @@ const HomeScreen = () => {
             className="mx-1"
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity className="bg-white p-5 rounded-2xl mb-6 shadow-sm">
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('TripExpenses', { ...item })
+                  }
+                  className="bg-white p-5 rounded-2xl mb-6 shadow-sm"
+                >
                   <View>
                     <Image source={randomImages()} className="w-40 h-40 mb-2" />
                     <Text className={`${color.heading} font-bold`}>
