@@ -39,12 +39,16 @@ const items = [
 ];
 
 const HomeScreen = () => {
+  console.log('Ini Random: ', randomImages());
+
   return (
-    <ScreenWrapper className="flex-1">
+    <ScreenWrapper>
       <View className="flex-row justify-between items-center p-4">
-        <Text className="font-bold text-3xl shadow-sm">Expensify</Text>
+        <Text className={`${color.heading} font-bold text-3xl shadow-sm`}>
+          Expensify
+        </Text>
         <TouchableOpacity className="p-2 px-3 bg-white border border-gray-200 rounded-full">
-          <Text className="">Logout</Text>
+          <Text className={`${color.heading}`}>Logout</Text>
         </TouchableOpacity>
       </View>
       <View className="flex-row justify-center items-center bg-blue-200 rounded-xl mx-4 mb-4">
@@ -53,8 +57,8 @@ const HomeScreen = () => {
           className="w-60 h-60"
         ></Image>
       </View>
-      <View className="px-4 space-y-3">
-        <View className="flex-row justify-between items-center">
+      <View className="px-4 flex-1">
+        <View className="flex-row justify-between items-center mb-4">
           <Text className={`${color.heading} font-bold text-xl`}>
             Recent Trips
           </Text>
@@ -62,7 +66,7 @@ const HomeScreen = () => {
             <Text className={color.heading}>Add Trip</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={{ height: 500 }}>
           <FlatList
             data={items}
             numColumns={2}
@@ -71,15 +75,12 @@ const HomeScreen = () => {
             columnWrapperStyle={{
               justifyContent: 'space-around',
             }}
-            className='="mx-1'
+            className="mx-1"
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity className="bg-white p-5 rounded-2xl mb-6 shadow-sm">
                   <View>
-                    <Image
-                      source={require('../../assets/images/2.png')}
-                      className="w-40 h-40 mb-2"
-                    />
+                    <Image source={randomImages()} className="w-40 h-40 mb-2" />
                     <Text className={`${color.heading} font-bold`}>
                       {item.place}
                     </Text>

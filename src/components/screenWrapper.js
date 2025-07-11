@@ -7,5 +7,15 @@ export default function ScreenWrapper({ children }) {
     : Platform.OS == 'android'
     ? 30
     : 0;
-  return <View style={{ paddingTop: statusBarHeight }}>{children}</View>;
+  return (
+    <View
+      style={{
+        paddingTop: statusBarHeight,
+        flex: 1,
+      }}
+    >
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      {children}
+    </View>
+  );
 }
