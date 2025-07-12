@@ -4,16 +4,43 @@ import ScreenWrapper from '../components/screenWrapper';
 import BackButton from '../components/backButton';
 import { color } from '../../assets/themes';
 import { useNavigation } from '@react-navigation/native';
+import Snackbar from 'react-native-snackbar';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase';
+import Loading from '../components/loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserLoading } from '../../redux/slices/user';
 
 const SignInScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleAddTrip = () => {
+  const { userLoading } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  const handleSignIn = async () => {
     if (email && password) {
-      navigation.navigate('Home');
-      console.log('Tempat: ', email);
+      // navigation.navigate('Home');
+      // console.log('Tempat: ', email);
+      try {
+        dispatch(setUserLoading(true));
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log('Sign: ', auth);
+        dispatch(setUserLoading(false));
+      } catch (e) {
+        dispatch(setUserLoading(false));
+        Snackbar.show({
+          text: e.message,
+          backgroundColor: 'red',
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
     } else {
+      Snackbar.show({
+        text: 'Email and Password are required!',
+        backgroundColor: 'red',
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
   return (
@@ -58,15 +85,19 @@ const SignInScreen = () => {
           </View>
         </View>
         <View>
-          <TouchableOpacity
-            onPress={handleAddTrip}
-            style={{ backgroundColor: color.button }}
-            className="my-6 rounded-full p-3 shadow-sm"
-          >
-            <Text className="text-center text-white font-bold text-lg">
-              Sign In
-            </Text>
-          </TouchableOpacity>
+          {userLoading ? (
+            <Loading />
+          ) : (
+            <TouchableOpacity
+              onPress={handleSignIn}
+              style={{ backgroundColor: color.button }}
+              className="my-6 rounded-full p-3 shadow-sm"
+            >
+              <Text className="text-center text-white font-bold text-lg">
+                Sign In
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScreenWrapper>
