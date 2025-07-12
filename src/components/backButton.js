@@ -8,7 +8,7 @@ const BackButton = () => {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Home')}
+      onPress={() => navigation.goBack()}
       className="rounded-full h-8 w-8"
     >
       <Image
