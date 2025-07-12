@@ -1,13 +1,14 @@
 import React from 'react-native';
 import './global.css';
 import AppNavigation from './src/navigation/appNavigation';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 function App() {
   return (
-    // <View style={styles.container} className="bg-black">
-    //   <Text className="text-rose-700">Hallo Dunia</Text>
-    // </View>
-    <AppNavigation />
+    <Provider store={store}>
+      <AppNavigation />
+    </Provider>
   );
 }
 
