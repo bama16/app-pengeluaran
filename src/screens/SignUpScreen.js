@@ -29,7 +29,7 @@ const SignUpScreen = () => {
       } catch (e) {
         dispatch(setUserLoading(false));
         Snackbar.show({
-          text: e.message,
+          text: 'Password atau email salah',
           backgroundColor: 'red',
           duration: Snackbar.LENGTH_SHORT,
         });

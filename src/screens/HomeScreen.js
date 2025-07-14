@@ -1,50 +1,41 @@
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../global.css';
 import ScreenWrapper from '../components/screenWrapper';
 import { color } from '../../assets/themes';
 import randomImages from '../../assets/images/randomimage';
 import EmptyList from '../components/emptyList';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../config/firebase';
-
-const items = [
-  {
-    id: 1,
-    place: 'Jakarta',
-    country: 'Indonesian',
-  },
-  {
-    id: 2,
-    place: 'Bandung',
-    country: 'Indonesian',
-  },
-  {
-    id: 3,
-    place: 'Yogyakarta',
-    country: 'Indonesian',
-  },
-  {
-    id: 4,
-    place: 'Bali',
-    country: 'Indonesian',
-  },
-  {
-    id: 5,
-    place: 'Papua',
-    country: 'Indonesian',
-  },
-  {
-    id: 6,
-    place: 'PIK',
-    country: 'Indonesian',
-  },
-];
+import { auth, tripsRef } from '../../config/firebase';
+import { useSelector } from 'react-redux';
+import { getDocs, query, where } from 'firebase/firestore';
 
 const HomeScreen = () => {
-  console.log('Ini Random: ', randomImages());
   const navigation = useNavigation();
+
+  const { user } = useSelector(state => state.user);
+  const [trips, setTrips] = useState([]);
+
+  const isFocused = useIsFocused();
+
+  const fetchTrips = async () => {
+    const q = query(tripsRef, where('userId', '==', user.uid));
+    const querySnapshot = await getDocs(q);
+
+    let data = [];
+    querySnapshot.forEach(doc => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+    setTrips(data);
+    console.log('data home screen:', data);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchTrips();
+    }
+  }, [isFocused]);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -83,7 +74,7 @@ const HomeScreen = () => {
         </View>
         <View style={{ height: 500 }}>
           <FlatList
-            data={items}
+            data={trips}
             numColumns={2}
             ListEmptyComponent={
               <EmptyList message={`You haven't recorded any trips yet`} />
@@ -91,7 +82,7 @@ const HomeScreen = () => {
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
-              justifyContent: 'space-around',
+              justifyContent: 'space-between',
             }}
             className="mx-1"
             renderItem={({ item }) => {

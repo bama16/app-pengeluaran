@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
@@ -20,13 +20,32 @@ export default function AppNavigation() {
 
   const dispatch = useDispatch();
 
-  onAuthStateChanged(auth, u => {
-    console.log('got user:', u);
-    dispatch(setUser(u));
-    console.log('isUser? ', user);
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, u => {
+      console.log('got user:', u);
+      dispatch(
+        setUser(
+          u
+            ? {
+                uid: u.uid,
+                email: u.email,
+                displayName: u.displayName,
+              }
+            : null,
+        ),
+      );
+      console.log('isUser? ', user);
+    });
+  }, []);
+
+  // onAuthStateChanged(auth, u => {
+  //   console.log('got user:', u);
+  //   dispatch(setUser(u));
+  //   console.log('isUser? ', user);
+  // });
 
   if (user) {
+    console.log('ke-2 isUser? ', user);
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">

@@ -5,20 +5,42 @@ import BackButton from '../components/backButton';
 import { color } from '../../assets/themes';
 import { useNavigation } from '@react-navigation/native';
 import { categories } from '../constants';
+import Loading from '../components/loading';
+import Snackbar from 'react-native-snackbar';
+import { addDoc } from 'firebase/firestore';
+import { expensesRef } from '../../config/firebase';
 
-const AddExpenseScreen = () => {
+const AddExpenseScreen = props => {
+  const { id } = props.route.params;
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
-  const handleAddTrip = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleAddTrip = async () => {
     if (title && amount && category) {
-      //   navigation.navigate('Home');
-      navigation.goBack();
-      console.log('Title: ', title);
-      console.log('Amount: ', amount);
       console.log('Category: ', category);
+      console.log('id add expense: ', id);
+      console.log('props add expense: ', props.route.params);
+
+      setLoading(true);
+      let doc = await addDoc(expensesRef, {
+        title,
+        amount,
+        category,
+        tripId: id,
+      });
+      if (doc && doc.id) {
+        setLoading(false);
+        navigation.goBack();
+      }
     } else {
+      Snackbar.show({
+        text: 'Title, Amount and Category are required!',
+        backgroundColor: 'red',
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
   return (
@@ -79,15 +101,19 @@ const AddExpenseScreen = () => {
           </View>
         </View>
         <View>
-          <TouchableOpacity
-            onPress={handleAddTrip}
-            style={{ backgroundColor: color.button }}
-            className="my-6 rounded-full p-3 shadow-sm"
-          >
-            <Text className="text-center text-white font-bold text-lg">
-              Add Expense
-            </Text>
-          </TouchableOpacity>
+          {loading ? (
+            <Loading />
+          ) : (
+            <TouchableOpacity
+              onPress={handleAddTrip}
+              style={{ backgroundColor: color.button }}
+              className="my-6 rounded-full p-3 shadow-sm"
+            >
+              <Text className="text-center text-white font-bold text-lg">
+                Add Expense
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScreenWrapper>
